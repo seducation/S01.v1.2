@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gemini_sidekick/chats_screen.dart';
-import 'package:gemini_sidekick/search_tools_screen.dart';
+import 'chats_screen.dart';
+import 'tab_manager_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -106,12 +106,75 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             theme.textTheme.bodyLarge?.color ?? theme.colorScheme.onSurface;
         final unselectedColor = theme.unselectedWidgetColor;
 
-        final String currentTitle = (_mainTabController.index < 2)
-            ? 'my app'
-            : _tabs[_mainTabController.index];
+        final tabBarWidget = Row(
+          children: [
+            InkWell(
+              onTap: () => _mainTabController.animateTo(0),
+              child: Container(
+                key: _tabKeys[0],
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                alignment: Alignment.center,
+                child: Text('shorts', style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: _mainTabController.index == 0
+                      ? FontWeight.bold
+                      : FontWeight.normal,
+                  color: _mainTabController.index == 0
+                      ? selectedColor
+                      : unselectedColor,
+                )),
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: List.generate(_tabs.length - 1, (index) {
+                    final tabIndex = index + 1;
+                    final isSelected =
+                        _mainTabController.index == tabIndex;
+                    return InkWell(
+                      onTap: () =>
+                          _mainTabController.animateTo(tabIndex),
+                      child: Container(
+                        key: _tabKeys[tabIndex],
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0),
+                        alignment: Alignment.center,
+                        child: Text(_tabs[tabIndex], style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: isSelected
+                              ? selectedColor
+                              : unselectedColor,
+                        )),
+                      ),
+                    );
+                  }),
+                ),
+              ),
+            ),
+          ],
+        );
 
-        return Scaffold(
-          appBar: AppBar(
+        AppBar appBar;
+        if (_mainTabController.index == 0) {
+          appBar = AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            title: SizedBox(
+              height: kToolbarHeight,
+              child: tabBarWidget,
+            ),
+            titleSpacing: 0,
+          );
+        } else {
+            final String currentTitle = (_mainTabController.index < 2)
+              ? 'my app'
+              : _tabs[_mainTabController.index];
+          appBar = AppBar(
             leadingWidth: 112,
             leading: Row(
               children: [
@@ -132,67 +195,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               preferredSize: const Size.fromHeight(kToolbarHeight),
               child: SizedBox(
                 height: kToolbarHeight,
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: () => _mainTabController.animateTo(0),
-                      child: Container(
-                        key: _tabKeys[0],
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        alignment: Alignment.center,
-                        child: Text('shorts', style: theme.textTheme.bodyLarge?.copyWith(
-                          fontWeight: _mainTabController.index == 0
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                          color: _mainTabController.index == 0
-                              ? selectedColor
-                              : unselectedColor,
-                        )),
-                      ),
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        controller: _scrollController,
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: List.generate(_tabs.length - 1, (index) {
-                            final tabIndex = index + 1;
-                            final isSelected =
-                                _mainTabController.index == tabIndex;
-                            return InkWell(
-                              onTap: () =>
-                                  _mainTabController.animateTo(tabIndex),
-                              child: Container(
-                                key: _tabKeys[tabIndex],
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0),
-                                alignment: Alignment.center,
-                                child: Text(_tabs[tabIndex], style: theme.textTheme.bodyLarge?.copyWith(
-                                  fontWeight: isSelected
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                  color: isSelected
-                                      ? selectedColor
-                                      : unselectedColor,
-                                )),
-                              ),
-                            );
-                          }),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                child: tabBarWidget,
               ),
             ),
-          ),
+          );
+        }
+
+        return Scaffold(
+          appBar: appBar,
           body: TabBarView(
             controller: _mainTabController,
-            children: _tabs.map((name) {
+            children: _tabs.map<Widget>((name) {
               if (name == 'search tools') {
                 // The reorderable part of the list excludes the first 2 tabs.
                 final reorderableTabs = _tabs.sublist(2);
-                return SearchToolsScreen(
+                return TabManagerScreen(
                   tabs: reorderableTabs,
                   onReorder: _onReorder,
                   onAddTab: _onAddTab,

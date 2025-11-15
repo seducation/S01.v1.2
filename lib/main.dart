@@ -36,7 +36,7 @@ class _MainScreenState extends State<MainScreen> {
     const HomeScreen(),
     const ChatsScreen(),
     const SearchScreen(),
-    const Community_screen(),
+    const CommunityScreen(),
     const LensScreen(),
   ];
 
