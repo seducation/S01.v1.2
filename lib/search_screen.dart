@@ -261,7 +261,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     IconButton(
                       icon: const Icon(Icons.menu),
                       onPressed: () {
-                        // TODO: Handle menu button press
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Menu button pressed'),
+                        ));
                       },
                     ),
                     const SizedBox(width: 8),
@@ -286,7 +288,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     IconButton(
                       icon: const Icon(Icons.map),
                       onPressed: () {
-                        // TODO: Handle map button press
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Map button pressed'),
+                        ));
                       },
                     ),
                   ],

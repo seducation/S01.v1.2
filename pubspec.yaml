@@ -8,8 +8,10 @@ environment:
 
 dependencies:
   algoliasearch: ^1.41.0
+  appwrite: ^12.0.1
   flutter:
     sdk: flutter
+  go_router: ^17.0.0
   google_fonts: ^6.3.2
   provider: ^6.1.5+1
 

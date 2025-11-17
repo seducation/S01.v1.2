@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'chats_screen.dart';
 import 'tab_manager_screen.dart';
 
@@ -178,7 +179,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             leadingWidth: 112,
             leading: Row(
               children: [
-                IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
+                IconButton(icon: const Icon(Icons.menu), onPressed: () {
+                   context.go('/profile');
+                }),
                 IconButton(
                     icon: const Icon(Icons.shopping_cart_outlined),
                     tooltip: 'Shop',
@@ -189,7 +192,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             centerTitle: true,
             actions: [
               IconButton(icon: const Icon(Icons.search), onPressed: () {}),
-              IconButton(icon: const Icon(Icons.add), onPressed: () {}),
+              IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    context.go('/add_post');
+                  }),
             ],
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(kToolbarHeight),

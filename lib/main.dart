@@ -1,23 +1,59 @@
-
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import 'add_post_screen.dart';
+import 'auth_service.dart';
 import 'home_screen.dart';
 import 'search_screen.dart';
 import 'chats_screen.dart';
 import 'community_screen.dart';
 import 'lens_screen.dart';
+import 'signin.dart';
+import 'signup.dart';
+import 'profile_screen.dart';
 
 void main() {
-  print("---------- RUNNING LATEST CODE ----------");
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => AuthService(),
+      child: const MyApp(),
+    ),
+  );
 }
+
+final _router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const MainScreen(),
+    ),
+    GoRoute(
+      path: '/signin',
+      builder: (context, state) => const SignInScreen(),
+    ),
+    GoRoute(
+      path: '/signup',
+      builder: (context, state) => const SignUpScreen(),
+    ),
+    GoRoute(
+      path: '/profile',
+      builder: (context, state) => const ProfileScreen(),
+    ),
+    GoRoute(
+      path: '/add_post',
+      builder: (context, state) => const AddPostScreen(),
+    ),
+  ],
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MainScreen(),
+    return MaterialApp.router(
+      routerConfig: _router,
     );
   }
 }
