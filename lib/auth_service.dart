@@ -7,35 +7,36 @@ class AuthService extends ChangeNotifier {
   late Account account;
   late Databases databases;
 
-  AuthService() {
+  bool _isLoggedIn = false;
+  bool get isLoggedIn => _isLoggedIn;
+
+  Future<void> init() async {
     client
         .setEndpoint('https://sgp.cloud.appwrite.io/v1') // Your Appwrite Endpoint
-        .setProject('691948bf001eb3eccd77') // Your project ID
-        .setSelfSigned(status: true);
+        .setProject('691948bf001eb3eccd77'); // Your project ID
     account = Account(client);
     databases = Databases(client);
+    await checkUser();
   }
 
-  Future<void> createPost(String content) async {
+  Future<void> createPost(Map<String, dynamic> postData) async {
     try {
       final user = await account.get();
       const databaseId = '691963ed003c37eb797f';
       const collectionId = 'post';
+      
+      // Add creator and other fields to the postData
+      postData['creator'] = user.$id;
+      postData['imageurl'] = ''; // Placeholder
+      postData['imageid'] = ''; // Placeholder
+      postData['likes'] = []; // Placeholder
+      postData['saves'] = []; // Placeholder
+
       await databases.createDocument(
         databaseId: databaseId,
         collectionId: collectionId,
         documentId: ID.unique(),
-        data: {
-          'caption': content,
-          'creator': user.$id,
-          'imageurl': '',
-          'imageid': '',
-          'tags': [],
-          'location': '',
-          'titles': '',
-          'likes': [],
-          'saves': [],
-        },
+        data: postData,
       );
     } catch (e) {
       rethrow;
@@ -78,6 +79,7 @@ class AuthService extends ChangeNotifier {
         email: email,
         password: password,
       );
+      _isLoggedIn = true;
       notifyListeners();
       return session;
     } catch (e) {
@@ -88,6 +90,7 @@ class AuthService extends ChangeNotifier {
   Future<void> signOut() async {
     try {
       await account.deleteSession(sessionId: 'current');
+      _isLoggedIn = false;
       notifyListeners();
     } catch (e) {
       rethrow;
@@ -97,8 +100,12 @@ class AuthService extends ChangeNotifier {
   Future<bool> checkUser() async {
     try {
       await account.get();
+      _isLoggedIn = true;
+      notifyListeners();
       return true;
     } catch (e) {
+      _isLoggedIn = false;
+      notifyListeners();
       return false;
     }
   }

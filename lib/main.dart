@@ -13,18 +13,52 @@ import 'signin.dart';
 import 'signup.dart';
 import 'profile_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final authService = AuthService();
+  await authService.init();
+
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => AuthService(),
-      child: const MyApp(),
+    ChangeNotifierProvider.value(
+      value: authService,
+      child: MyApp(authService: authService),
     ),
   );
 }
 
-final _router = GoRouter(
-  routes: [
-    GoRoute(
+class MyApp extends StatelessWidget {
+  final AuthService authService;
+  const MyApp({super.key, required this.authService});
+
+  @override
+  Widget build(BuildContext context) {
+    final router = _createRouter(authService);
+
+    return MaterialApp.router(
+      routerConfig: router,
+    );
+  }
+}
+
+GoRouter _createRouter(AuthService authService) {
+  return GoRouter(
+    refreshListenable: authService,
+    redirect: (BuildContext context, GoRouterState state) {
+      final loggedIn = authService.isLoggedIn;
+      final loggingIn = state.matchedLocation == '/signin' || state.matchedLocation == '/signup';
+
+      if (!loggedIn) {
+        return loggingIn ? null : '/signin';
+      }
+
+      if (loggingIn) {
+        return '/';
+      }
+
+      return null;
+    },
+    routes: [
+      GoRoute(
         path: '/',
         builder: (context, state) => const MainScreen(),
         routes: [
@@ -32,31 +66,22 @@ final _router = GoRouter(
             path: 'add_post',
             builder: (context, state) => const AddPostScreen(),
           ),
-        ]),
-    GoRoute(
-      path: '/signin',
-      builder: (context, state) => const SignInScreen(),
-    ),
-    GoRoute(
-      path: '/signup',
-      builder: (context, state) => const SignUpScreen(),
-    ),
-    GoRoute(
-      path: '/profile',
-      builder: (context, state) => const ProfileScreen(),
-    ),
-  ],
-);
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: _router,
-    );
-  }
+        ]
+      ),
+      GoRoute(
+        path: '/signin',
+        builder: (context, state) => const SignInScreen(),
+      ),
+      GoRoute(
+        path: '/signup',
+        builder: (context, state) => const SignUpScreen(),
+      ),
+      GoRoute(
+        path: '/profile',
+        builder: (context, state) => const ProfileScreen(),
+      ),
+    ],
+  );
 }
 
 class MainScreen extends StatefulWidget {

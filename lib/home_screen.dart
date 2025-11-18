@@ -191,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             title: Text(currentTitle),
             centerTitle: true,
             actions: [
-              IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+              IconButton(icon: const Icon(Icons.search), onPressed: () => context.go('/search')),
               IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {
@@ -222,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   onAddTab: _onAddTab,
                 );
               } else if (name == 'chats') {
-                return const ChatsScreen();
+                return ChatsScreen();
               } else {
                 return Center(child: Text('$name Content'));
               }
