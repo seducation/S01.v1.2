@@ -3,12 +3,12 @@ import 'package:myapp/poster_item.dart';
 import 'package:myapp/widgets/poster_widget_community_screen.dart';
 import 'package:myapp/widgets/shimmer_poster_placeholder_community_screen.dart';
 
-class HorizontalSection extends StatelessWidget {
+class HorizontalRailSection extends StatelessWidget {
   final String title;
   final List<PosterItem> items;
   final bool isLoading;
 
-  const HorizontalSection({
+  const HorizontalRailSection({
     super.key,
     required this.title,
     required this.items,

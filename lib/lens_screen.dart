@@ -1,6 +1,6 @@
 
 import 'package:appwrite/appwrite.dart';
-import 'package:appwrite/models.dart';
+import 'package:appwrite/models.dart' hide Row;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_picker/image_picker.dart';
@@ -104,6 +104,15 @@ class _LensScreenState extends State<LensScreen> {
     }
   }
 
+  Future<void> _refreshData() async {
+    setState(() {
+      _items.clear();
+      _lastDocumentId = null;
+      _hasMore = true;
+    });
+    await _fetchData();
+  }
+
   Future<void> _uploadImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image == null) {
@@ -137,10 +146,7 @@ class _LensScreenState extends State<LensScreen> {
       );
 
       // Refresh data after upload
-      _items.clear();
-      _lastDocumentId = null;
-      _hasMore = true;
-      _fetchData();
+      await _refreshData();
     } on AppwriteException catch (e) {
       setState(() {
         _error = e.message;
@@ -162,8 +168,8 @@ class _LensScreenState extends State<LensScreen> {
             title: const Text('Lens'),
             actions: [
               IconButton(
-                icon: const Icon(Icons.camera_alt_outlined),
-                onPressed: _uploadImage,
+                icon: const Icon(Icons.refresh),
+                onPressed: _refreshData,
               ),
               IconButton(
                 icon: const Icon(Icons.menu),
@@ -174,6 +180,25 @@ class _LensScreenState extends State<LensScreen> {
             ],
             pinned: true,
             floating: true,
+          ),
+          SliverToBoxAdapter(
+            child: GestureDetector(
+              onTap: _uploadImage,
+              child: Card(
+                margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.camera_alt_outlined),
+                      SizedBox(width: 8),
+                      Text('Camera'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
           if (_error != null)
             SliverToBoxAdapter(

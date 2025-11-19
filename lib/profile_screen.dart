@@ -40,9 +40,41 @@ class ProfileScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Name: ${user.name}', style: Theme.of(context).textTheme.headlineSmall),
+                Card(
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Text(user.name[0]),
+                    ),
+                    title: Text(user.name, style: Theme.of(context).textTheme.headlineSmall),
+                    subtitle: Text(user.email, style: Theme.of(context).textTheme.titleMedium),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Center(
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.add, size: 28),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text('channel1'),
                 const SizedBox(height: 8),
-                Text('Email: ${user.email}', style: Theme.of(context).textTheme.titleMedium),
+                const Text('channel2'),
+                const SizedBox(height: 8),
+                const Text('channel3'),
+                const SizedBox(height: 16),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'SHOW MORE',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () async {

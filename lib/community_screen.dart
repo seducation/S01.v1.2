@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/widgets/hero_banner.dart';
 import 'package:myapp/widgets/poster_rail_section_community_screen.dart';
+import 'package:myapp/widgets/status_rail_section.dart';
 import 'appwrite_service.dart';
 import 'poster_item.dart';
 
@@ -64,17 +65,24 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 imageUrl: "https://is3-ssl.mzstatic.com/image/thumb/Features116/v4/3c/f1/c1/3cf1c1f7-4a74-a621-3d5f-149b1390906f/U0YtVFZBLVVTQS1GYW1pbHktQ2Fyb3VzZWwtU2V2ZXJhbmNlLnBuZw/1679x945.webp",
               ),
             ]),
-            HorizontalSection(
+            const SizedBox(height: 20),
+            StatusRailSection(
+              title: "People",
+              items: movies,
+              isLoading: loading,
+            ),
+            const SizedBox(height: 20),
+            HorizontalRailSection(
               title: "Discover",
               items: movies,
               isLoading: loading,
             ),
-            HorizontalSection(
+            HorizontalRailSection(
               title: "Trending Now",
               items: movies,
               isLoading: loading,
             ),
-            HorizontalSection(
+            HorizontalRailSection(
               title: "New Releases",
               items: movies,
               isLoading: loading,

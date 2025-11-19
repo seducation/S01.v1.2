@@ -171,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
             titleSpacing: 0,
             actions: [
-              IconButton(icon: const Icon(Icons.search), onPressed: () => context.go('/search')),
+              IconButton(icon: const Icon(Icons.search), onPressed: () => context.go('/search_result')),
               IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {
@@ -199,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             title: Text(currentTitle),
             centerTitle: true,
             actions: [
-              IconButton(icon: const Icon(Icons.search), onPressed: () => context.go('/search')),
+              IconButton(icon: const Icon(Icons.search), onPressed: () => context.go('/search_result')),
               IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {

@@ -498,9 +498,9 @@ class _ChatScrState extends State<ChatScr> with TickerProviderStateMixin {
         constraints: const BoxConstraints.expand(),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(themeNotifier.isDark
-                ? "https://picsum.photos/seed/dark/600/800"
-                : "https://picsum.photos/seed/light/600/800"),
+            image: themeNotifier.isDark
+                ? const AssetImage("web/icons/Icon-512.png")
+                : const AssetImage("web/icons/Icon-512.png"),
             fit: BoxFit.cover,
           ),
         ),
@@ -603,8 +603,11 @@ class _ChatScrState extends State<ChatScr> with TickerProviderStateMixin {
                 itemCount: _messages.length, // NEW
               ), // NEW
             ), // NEW
-
-            _buildTextComposer(), // MODIFIED
+            const Divider(height: 1.0),
+            Container(
+              decoration: BoxDecoration(color: Theme.of(context).cardColor),
+              child: _buildTextComposer(),
+            ),
           ], // NEW
         ),
       );
